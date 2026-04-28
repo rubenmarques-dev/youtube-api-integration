@@ -1,0 +1,77 @@
+basePath: /
+definitions:
+  domain.Chapter:
+    properties:
+      seconds:
+        description: total seconds from start
+        type: integer
+      timestamp:
+        description: human-readable, e.g. "1:23" or "1:23:45"
+        type: string
+      title:
+        type: string
+    type: object
+  domain.Video:
+    properties:
+      channelTitle:
+        type: string
+      chapters:
+        items:
+          $ref: '#/definitions/domain.Chapter'
+        type: array
+      description:
+        type: string
+      likeCount:
+        type: string
+      publishedAt:
+        type: string
+      title:
+        type: string
+      viewCount:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: POC service for fetching YouTube video metadata.
+  title: YouTube API Integration
+  version: "1.0"
+paths:
+  /video:
+    get:
+      description: Fetches metadata for a YouTube video by its ID
+      parameters:
+      - description: YouTube Video ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Video'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get video metadata
+      tags:
+      - video
+swagger: "2.0"

@@ -42,5 +42,6 @@ func (c *Client) GetVideoByID(ctx context.Context, id string) (*domain.Video, er
 		ChannelTitle: item.Snippet.ChannelTitle,
 		PublishedAt:  item.Snippet.PublishedAt,
 	}
+	v.Chapters = domain.ParseChapters(item.Snippet.Description)
 	return v, nil
 }

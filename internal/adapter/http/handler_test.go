@@ -79,6 +79,10 @@ func TestGetVideo_Success(t *testing.T) {
 		LikeCount:    "50",
 		ChannelTitle: "Test Channel",
 		PublishedAt:  "2024-01-01T00:00:00Z",
+		Chapters: []domain.Chapter{
+			{Title: "Intro", Timestamp: "0:00", Seconds: 0},
+			{Title: "Main", Timestamp: "1:30", Seconds: 90},
+		},
 	}
 	h := newTestHandler(&mockRepo{video: want})
 	mux := http.NewServeMux()
@@ -98,5 +102,13 @@ func TestGetVideo_Success(t *testing.T) {
 	}
 	if got.Title != want.Title {
 		t.Errorf("title: got %q, want %q", got.Title, want.Title)
+	}
+	if len(got.Chapters) != len(want.Chapters) {
+		t.Fatalf("chapters: got %d, want %d", len(got.Chapters), len(want.Chapters))
+	}
+	for i, wc := range want.Chapters {
+		if got.Chapters[i] != wc {
+			t.Errorf("chapter[%d]: got %+v, want %+v", i, got.Chapters[i], wc)
+		}
 	}
 }

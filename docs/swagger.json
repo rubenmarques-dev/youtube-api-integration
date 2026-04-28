@@ -1,0 +1,116 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "POC service for fetching YouTube video metadata.",
+        "title": "YouTube API Integration",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/video": {
+            "get": {
+                "description": "Fetches metadata for a YouTube video by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "video"
+                ],
+                "summary": "Get video metadata",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "YouTube Video ID",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Video"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "domain.Chapter": {
+            "type": "object",
+            "properties": {
+                "seconds": {
+                    "description": "total seconds from start",
+                    "type": "integer"
+                },
+                "timestamp": {
+                    "description": "human-readable, e.g. \"1:23\" or \"1:23:45\"",
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Video": {
+            "type": "object",
+            "properties": {
+                "channelTitle": {
+                    "type": "string"
+                },
+                "chapters": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Chapter"
+                    }
+                },
+                "description": {
+                    "type": "string"
+                },
+                "likeCount": {
+                    "type": "string"
+                },
+                "publishedAt": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "viewCount": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

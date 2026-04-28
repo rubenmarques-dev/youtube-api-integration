@@ -5,10 +5,17 @@ import (
 	"net/http"
 	"os"
 
+	_ "github.com/rubenmarques/youtube-api-integration/docs"
 	httphandler "github.com/rubenmarques/youtube-api-integration/internal/adapter/http"
 	youtubeadapter "github.com/rubenmarques/youtube-api-integration/internal/adapter/youtube"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
+// @title           YouTube API Integration
+// @version         1.0
+// @description     POC service for fetching YouTube video metadata.
+// @host            localhost:8080
+// @BasePath        /
 func main() {
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
@@ -32,6 +39,7 @@ func main() {
 	mux := http.NewServeMux()
 	h := httphandler.New(ytClient, logger)
 	h.RegisterRoutes(mux)
+	mux.Handle("/swagger/", httpSwagger.WrapHandler)
 
 	logger.Info("starting server", "port", port)
 	if err := http.ListenAndServe(":"+port, mux); err != nil {

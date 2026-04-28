@@ -35,6 +35,17 @@ func writeJSON(w http.ResponseWriter, status int, v any) {
 	_ = json.NewEncoder(w).Encode(v)
 }
 
+// GetVideo godoc
+// @Summary      Get video metadata
+// @Description  Fetches metadata for a YouTube video by its ID
+// @Tags         video
+// @Produce      json
+// @Param        id   query     string  true  "YouTube Video ID"
+// @Success      200  {object}  domain.Video
+// @Failure      400  {object}  map[string]string
+// @Failure      404  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
+// @Router       /video [get]
 func (h *Handler) getVideo(w http.ResponseWriter, r *http.Request) {
 	h.logger.Info("incoming request", "method", r.Method, "path", r.URL.Path)
 
