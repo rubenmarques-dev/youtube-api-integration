@@ -11,6 +11,19 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
 // @title           YouTube API Integration
 // @version         1.0
 // @description     POC service for fetching YouTube video metadata.
@@ -42,7 +55,7 @@ func main() {
 	mux.Handle("/swagger/", httpSwagger.WrapHandler)
 
 	logger.Info("starting server", "port", port)
-	if err := http.ListenAndServe(":"+port, mux); err != nil {
+	if err := http.ListenAndServe(":"+port, corsMiddleware(mux)); err != nil {
 		logger.Error("server error", "error", err)
 		os.Exit(1)
 	}
